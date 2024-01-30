@@ -1,0 +1,104 @@
+version: "3.8"
+services:
+  postgres-1:
+    container_name: postgres_2
+    image: postgres
+    environment:
+      POSTGRES_USER: haribabu
+      POSTGRES_PASSWORD: password
+      PGDATA: /var/lib/postgresql/data1
+    volumes:
+      - db-data1:/var/lib/postgresql/data1
+    ports:
+      - "6000:6000"
+    networks:
+      - postgres
+    restart: unless-stopped
+  postgres:
+    container_name: postgres
+    image: postgres
+    environment:
+      POSTGRES_USER: haribabu
+      POSTGRES_PASSWORD: password
+      PGDATA: /var/lib/postgresql/data
+    volumes:
+      - db-data:/var/lib/postgresql/data
+
+    ports:
+      - "5432:5432"
+    networks:
+      - postgres
+    restart: unless-stopped
+
+  pgadmin:
+    container_name: pgadmin
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL:-hari@gmail.com}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD:-admin}
+      PGADMIN-CONFIG-SERVER_MODE: "False"
+    #      PGADMIN_LISTEN_PORT: 80
+
+    volumes:
+      - pgadmin-data:/var/lib/pgadmin
+    ports:
+      - "5050:80"
+    networks:
+      - postgres
+    restart: unless-stopped
+  zipkin:
+    image: openzipkin/zipkin
+    container_name: zipkin
+    networks:
+      - spring
+    ports:
+      # Port used for the Zipkin UI and HTTP Api
+      - 9411:9411
+      # Uncomment if you set SCRIBE_ENABLED=true
+      # - 9410:9410
+#  rabbitmq:
+#    image: rabbitmq:3.9.8-management-alpine
+#    container_name: rabbitmq
+##  username: guest, pass: guest
+#    ports:
+#      # Port used for the Zipkin UI and HTTP Api
+#      - 5676:5676
+#      - 15672:15672
+      # Uncomment if you set SCRIBE_ENABLED=true
+      # - 9410:9410
+
+
+  eureka-server:
+    image: haribabu77/eureka-server:1.0-SNAPSHOT
+    container_name: eureka-server
+    ports:
+      - "8888:8888"
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+    networks:
+      - spring
+    depends_on:
+      - zipkin
+  apigw-server:
+    image: haribabu77/apigw-server:1.0-SNAPSHOT
+    container_name: apigw-server
+    ports:
+      - "8083:8083"
+    networks:
+      - spring
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+    depends_on:
+      - zipkin
+      - eureka-server
+networks:
+  postgres:
+    driver: bridge
+  spring:
+    driver: bridge
+
+volumes:
+  db-data:
+  db-data1:
+  pgadmin-data:
+

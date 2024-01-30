@@ -1,0 +1,4 @@
+com\java\amqp\Receiver.class
+com\java\amqp\RabbitMQMessageProducer.class
+com\java\amqp\RabbitMQConfig.class
+com\java\amqp\AMQPApplication.class

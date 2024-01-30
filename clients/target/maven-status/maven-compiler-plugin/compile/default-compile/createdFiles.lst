@@ -1,0 +1,6 @@
+com\java\clients\fraud\FraudClient.class
+com\java\clients\ClientsApplication.class
+com\java\clients\fraud\LoadBalancerConfiguration.class
+com\java\clients\notification\NotificationRequest.class
+com\java\clients\notification\NotificationClient.class
+com\java\clients\fraud\FraudCheckResponse.class

@@ -1,0 +1,6 @@
+com\java\fraud\FraudController.class
+com\java\fraud\FraudCheckHistory.class
+com\java\fraud\FraudRepository.class
+com\java\fraud\FraudService.class
+com\java\fraud\FraudCheckHistory$FraudCheckHistoryBuilder.class
+com\java\fraud\FraudApplication.class
